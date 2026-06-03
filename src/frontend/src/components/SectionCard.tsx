@@ -31,7 +31,6 @@ export function SectionCard({ section, index }: SectionCardProps) {
     >
       <Link
         to={section.path}
-        data-ocid={`section.card.${index + 1}`}
         className={`group card-elevated flex flex-col gap-3 p-5 border transition-smooth cursor-pointer block no-underline ${colorMap[section.color]}`}
       >
         <div className="flex items-start justify-between">

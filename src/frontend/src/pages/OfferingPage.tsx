@@ -47,11 +47,7 @@ export default function OfferingPage() {
   const info = offering ?? FALLBACK_OFFERING;
 
   return (
-    <div
-      data-ocid="offering.page"
-      className="max-w-3xl mx-auto px-4 py-10 space-y-8"
-    >
-      {/* Header */}
+    <div className="max-w-3xl mx-auto px-4 py-10 space-y-8">
       <div className="text-center space-y-2">
         <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-accent/15 border border-accent/30 mb-2">
           <HandCoins size={26} className="text-accent" />
@@ -66,7 +62,7 @@ export default function OfferingPage() {
       </div>
 
       {isLoading ? (
-        <div data-ocid="offering.loading_state" className="space-y-4">
+        <div className="space-y-4">
           <Skeleton className="h-40 w-full rounded-xl" />
           <Skeleton className="h-40 w-full rounded-xl" />
         </div>
@@ -74,7 +70,6 @@ export default function OfferingPage() {
         <>
           {/* M-Pesa Card */}
           <div
-            data-ocid="offering.mpesa_card"
             className="rounded-xl border-2 border-secondary/40 bg-secondary/5 p-6 space-y-4"
           >
             <div className="flex items-center gap-3">
@@ -118,11 +113,10 @@ export default function OfferingPage() {
 
           {/* Bank Card */}
           <div
-            data-ocid="offering.bank_card"
             className="rounded-xl border-2 border-primary/30 bg-primary/5 p-6 space-y-4"
           >
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center shrink-0">
                 <Landmark size={20} className="text-primary" />
               </div>
               <div>
@@ -166,12 +160,9 @@ export default function OfferingPage() {
           {/* Instructions */}
           {info.instructions && (
             <div
-              data-ocid="offering.instructions"
               className="rounded-xl bg-muted/40 border border-border p-5 text-sm text-muted-foreground leading-relaxed"
             >
-              <p className="font-semibold text-foreground mb-1 text-base">
-                How to Give
-              </p>
+              <p className="font-semibold text-foreground mb-1 text-base">Instructions</p>
               <p>{info.instructions}</p>
             </div>
           )}

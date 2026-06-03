@@ -1,5 +1,7 @@
-import { useInternetIdentity } from "@caffeineai/core-infrastructure";
+import { createActor } from "@/backend";
+import { useActor, useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export function useAuth() {
   const {
@@ -13,6 +15,15 @@ export function useAuth() {
   } = useInternetIdentity();
 
   const queryClient = useQueryClient();
+  const { actor } = useActor(createActor);
+
+  const { data: userRole } = useQuery({
+    queryKey: ["userRole", identity?.getPrincipal().toString()],
+    queryFn: async () => {
+      return actor ? actor.getCallerUserRole() : null;
+    },
+    enabled: !!actor && isAuthenticated,
+  });
 
   const handleLogin = () => {
     login();
@@ -24,7 +35,7 @@ export function useAuth() {
   };
 
   const principalText = identity?.getPrincipal().toString() ?? "";
-  const isAdmin = isAuthenticated; // Admin is any authenticated user (first login becomes admin)
+  const isAdmin = isAuthenticated && userRole && 'admin' in userRole;
 
   return {
     isAuthenticated,

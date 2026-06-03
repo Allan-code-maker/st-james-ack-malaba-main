@@ -39,14 +39,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen flex flex-col bg-background">
       {/* ── Header ── */}
       <header
-        data-ocid="layout.header"
         className="bg-primary text-primary-foreground border-b-2 border-accent sticky top-0 z-50 shadow-md"
       >
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
           {/* Brand */}
           <Link
             to="/"
-            data-ocid="layout.brand.link"
             className="flex items-center gap-2.5 shrink-0 no-underline text-primary-foreground hover:opacity-90 transition-opacity"
           >
             <div className="w-9 h-9 rounded-lg bg-accent/20 border border-accent/40 flex items-center justify-center">
@@ -69,7 +67,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <Link
                 key={link.path}
                 to={link.path}
-                data-ocid={`layout.nav.${link.label.toLowerCase().replace(/\s+/g, "-")}`}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors no-underline ${
                   currentPath === link.path
                     ? "bg-primary-foreground/20 text-primary-foreground"
@@ -87,7 +84,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {isAuthenticated && (
               <Link
                 to="/admin"
-                data-ocid="layout.admin.link"
                 className="hidden md:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md text-accent border border-accent/40 hover:bg-accent/10 transition-colors no-underline font-medium"
               >
                 <Shield size={12} /> Dashboard
@@ -96,9 +92,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <Button
               variant="outline"
               size="sm"
-              data-ocid={
-                isAuthenticated ? "layout.logout_button" : "layout.login_button"
-              }
               onClick={isAuthenticated ? handleLogout : handleLogin}
               disabled={isInitializing || isLoggingIn}
               className="bg-transparent border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground hover:border-primary-foreground/50 text-xs"
@@ -115,7 +108,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
             {/* Mobile hamburger */}
             <button
               type="button"
-              data-ocid="layout.mobile_menu_toggle"
               className="md:hidden p-1.5 rounded-md text-primary-foreground/80 hover:bg-primary-foreground/10 transition-colors"
               onClick={() => setMobileOpen((v) => !v)}
               aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -128,7 +120,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {/* Mobile Menu */}
         {mobileOpen && (
           <nav
-            data-ocid="layout.mobile_menu"
             className="md:hidden bg-primary border-t border-primary-foreground/20 px-4 pb-4"
             aria-label="Mobile navigation"
           >
@@ -137,7 +128,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 <Link
                   key={link.path}
                   to={link.path}
-                  data-ocid={`layout.mobile_nav.${link.label.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={() => setMobileOpen(false)}
                   className={`px-3 py-2 rounded-md text-sm font-medium no-underline transition-colors ${
                     currentPath === link.path
@@ -151,7 +141,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
               {isAuthenticated && (
                 <Link
                   to="/admin"
-                  data-ocid="layout.mobile_admin.link"
                   onClick={() => setMobileOpen(false)}
                   className="px-3 py-2 rounded-md text-sm font-medium text-accent hover:bg-primary-foreground/10 no-underline transition-colors"
                 >
@@ -177,15 +166,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             <span>— Digital Church System</span>
           </div>
           <div className="text-xs">
-            © {new Date().getFullYear()}. Built with love using{" "}
-            <a
-              href={`https://caffeine.ai?utm_source=caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(typeof window !== "undefined" ? window.location.hostname : "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-primary hover:underline"
-            >
-              caffeine.ai
-            </a>
+            © {new Date().getFullYear()} St. James ACK Malaba. All rights reserved.
           </div>
         </div>
       </footer>

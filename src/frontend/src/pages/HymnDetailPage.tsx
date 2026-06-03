@@ -4,6 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useHymn } from "@/lib/backend";
 import { Link, useParams } from "@tanstack/react-router";
 import { ArrowLeft, BookOpen, Monitor } from "lucide-react";
+import React from "react";
 
 function LyricsSkeleton() {
   return (
@@ -24,14 +25,21 @@ function LyricsSkeleton() {
 
 export default function HymnDetailPage() {
   const { id } = useParams({ from: "/hymns/$id" });
-  const hymnId = BigInt(id);
+  const hymnId = React.useMemo(() => {
+    try {
+      return BigInt(id);
+    } catch {
+      return 0n;
+    }
+  }, [id]);
+
   const { data: hymn, isLoading } = useHymn(hymnId);
 
   return (
-    <div data-ocid="hymn-detail.page" className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Back navigation */}
       <div className="mb-6">
-        <Link to="/hymns" data-ocid="hymn-detail.back_link">
+        <Link to="/hymns">
           <Button
             variant="ghost"
             size="sm"
@@ -46,7 +54,7 @@ export default function HymnDetailPage() {
       {isLoading ? (
         <LyricsSkeleton />
       ) : !hymn ? (
-        <div data-ocid="hymn-detail.error_state" className="text-center py-20">
+        <div className="text-center py-20">
           <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
           <h2 className="font-display text-xl font-semibold text-foreground mb-1">
             Hymn not found
@@ -87,7 +95,6 @@ export default function HymnDetailPage() {
               <Link
                 to="/hymns/display/$id"
                 params={{ id: id }}
-                data-ocid="hymn-detail.project_button"
               >
                 <Button className="gap-2">
                   <Monitor className="h-4 w-4" />
@@ -99,7 +106,6 @@ export default function HymnDetailPage() {
 
           {/* Lyrics */}
           <article
-            data-ocid="hymn-detail.lyrics"
             className="prose prose-lg max-w-none"
           >
             <div
@@ -112,7 +118,7 @@ export default function HymnDetailPage() {
 
           {/* Footer navigation */}
           <div className="mt-10 pt-6 border-t border-border flex justify-between items-center">
-            <Link to="/hymns" data-ocid="hymn-detail.back_link_bottom">
+            <Link to="/hymns">
               <Button variant="outline" size="sm" className="gap-2">
                 <ArrowLeft className="h-4 w-4" />
                 All Hymns
@@ -121,7 +127,6 @@ export default function HymnDetailPage() {
             <Link
               to="/hymns/display/$id"
               params={{ id: id }}
-              data-ocid="hymn-detail.project_button_bottom"
             >
               <Button variant="secondary" size="sm" className="gap-2">
                 <Monitor className="h-4 w-4" />

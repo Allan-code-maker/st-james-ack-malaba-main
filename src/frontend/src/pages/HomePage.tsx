@@ -110,7 +110,7 @@ const SECTIONS: SectionMeta[] = [
 
 export default function HomePage() {
   return (
-    <div data-ocid="home.page">
+    <div>
       {/* Hero Banner */}
       <section
         className="relative overflow-hidden bg-primary text-primary-foreground"
@@ -161,7 +161,6 @@ export default function HomePage() {
           </motion.div>
 
           <div
-            data-ocid="home.sections.list"
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
           >
             {SECTIONS.map((section, i) => (

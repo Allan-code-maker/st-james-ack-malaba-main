@@ -22,6 +22,8 @@ export function useHymns() {
     queryKey: ["hymns"],
     queryFn: async () => (actor ? actor.listHymns() : []),
     enabled: !!actor && !isFetching,
+    staleTime: 1000 * 60 * 60, // 1 hour - hymns rarely change
+    gcTime: 1000 * 60 * 60 * 24, // Keep in cache for a day
   });
 }
 
@@ -31,6 +33,7 @@ export function useHymn(id: bigint) {
     queryKey: ["hymn", id.toString()],
     queryFn: async () => (actor ? actor.getHymn(id) : null),
     enabled: !!actor && !isFetching,
+    staleTime: 1000 * 60 * 60,
   });
 }
 
@@ -70,6 +73,8 @@ export function useAnnouncements() {
     queryKey: ["announcements"],
     queryFn: async () => (actor ? actor.listAnnouncements() : []),
     enabled: !!actor && !isFetching,
+    staleTime: 1000 * 60 * 5, // 5 minutes - more frequent updates
+    refetchOnWindowFocus: true,
   });
 }
 

@@ -2,8 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useHymn } from "@/lib/backend";
 import { useNavigate, useParams } from "@tanstack/react-router";
-import { ChevronLeft, Moon, Sun, X, ZoomIn, ZoomOut } from "lucide-react";
-import { useEffect, useState } from "react";
+import { ChevronLeft, Moon, Share2, Sun, X, ZoomIn, ZoomOut } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 type FontSize = "lg" | "xl" | "2xl" | "3xl" | "4xl";
 
@@ -33,6 +33,38 @@ export default function HymnDisplayPage() {
   const [fontSize, setFontSize] = useState<FontSize>("2xl");
   const [controlsVisible, setControlsVisible] = useState(true);
 
+  // Screen Wake Lock to prevent dimming during projection
+  const wakeLock = useRef<any>(null);
+
+  useEffect(() => {
+    const requestWakeLock = async () => {
+      try {
+        if ("wakeLock" in navigator) {
+          wakeLock.current = await (navigator as any).wakeLock.request("screen");
+        }
+      } catch (err) {
+        console.error(`${err.name}, ${err.message}`);
+      }
+    };
+
+    requestWakeLock();
+
+    // Re-request wake lock when page becomes visible again
+    const handleVisibilityChange = () => {
+      if (wakeLock.current !== null && document.visibilityState === 'visible') {
+        requestWakeLock();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      if (wakeLock.current) {
+        wakeLock.current.release().then(() => { wakeLock.current = null; });
+      }
+    };
+  }, []);
+
   // Auto-hide controls after 4 seconds of inactivity — re-trigger whenever controls become visible
   useEffect(() => {
     if (!controlsVisible) return;
@@ -48,6 +80,17 @@ export default function HymnDisplayPage() {
 
   const handleBack = () => {
     navigate({ to: "/hymns/$id", params: { id } });
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (navigator.share && hymn) {
+      navigator.share({
+        title: `Hymn ${hymn.number}: ${hymn.title}`,
+        text: hymn.lyrics,
+        url: window.location.href,
+      });
+    }
   };
 
   return (
@@ -96,6 +139,18 @@ export default function HymnDisplayPage() {
             <X className="h-4 w-4" />
             <span className="hidden sm:inline">Exit</span>
           </Button>
+          {navigator.share && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              onClick={handleShare}
+              className="gap-2 text-current hover:bg-white/10"
+            >
+              <Share2 className="h-4 w-4" />
+              <span className="hidden sm:inline">Share</span>
+            </Button>
+          )}
         </div>
 
         <div className="flex items-center gap-2">

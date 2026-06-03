@@ -1,3 +1,4 @@
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
@@ -12,7 +13,21 @@ import AdminServiceBook from "@/pages/admin/AdminServiceBook";
 import AdminSundayProgram from "@/pages/admin/AdminSundayProgram";
 import AdminSundaySchool from "@/pages/admin/AdminSundaySchool";
 import AdminYouthMinistry from "@/pages/admin/AdminYouthMinistry";
-import { LogIn, LogOut, Shield } from "lucide-react";
+import { LayoutDashboard, LogIn, LogOut, Shield, Settings } from "lucide-react";
+
+const ADMIN_SECTIONS = [
+  { value: "hymns", label: "Hymns", icon: "🎵", component: <AdminHymns /> },
+  { value: "bible-readings", label: "Bible Readings", icon: "📖", component: <AdminBibleReadings /> },
+  { value: "announcements", label: "Announcements", icon: "📢", component: <AdminAnnouncements /> },
+  { value: "sermons", label: "Sermons", icon: "🎤", component: <AdminSermons /> },
+  { value: "sunday-program", label: "Sunday Program", icon: "📅", component: <AdminSundayProgram /> },
+  { value: "sunday-school", label: "Sunday School", icon: "👶", component: <AdminSundaySchool /> },
+  { value: "youth", label: "Youth Ministry", icon: "👥", component: <AdminYouthMinistry /> },
+  { value: "mothers-union", label: "Mothers' Union", icon: "👩", component: <AdminMothersUnion /> },
+  { value: "mens-association", label: "Men's Association", icon: "👨", component: <AdminMensAssociation /> },
+  { value: "offering", label: "Offering", icon: "💰", component: <AdminOffering /> },
+  { value: "service-book", label: "Service Book", icon: "📘", component: <AdminServiceBook /> },
+];
 
 export default function AdminPage() {
   const {
@@ -25,10 +40,7 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div
-        data-ocid="admin.page"
-        className="max-w-md mx-auto px-4 py-16 text-center"
-      >
+      <div className="max-w-md mx-auto px-4 py-16 text-center">
         <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
           <Shield size={28} className="text-primary" />
         </div>
@@ -39,7 +51,6 @@ export default function AdminPage() {
           Sign in with Internet Identity to manage church content.
         </p>
         <Button
-          data-ocid="admin.login_button"
           onClick={handleLogin}
           disabled={isInitializing || isLoggingIn}
           className="gap-2"
@@ -56,10 +67,10 @@ export default function AdminPage() {
   }
 
   return (
-    <div data-ocid="admin.page" className="max-w-6xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
       <div className="flex items-center gap-3 mb-8">
         <div className="w-10 h-10 rounded-xl bg-primary/15 flex items-center justify-center shrink-0">
-          <Shield size={20} className="text-primary" />
+          <LayoutDashboard size={20} className="text-primary" />
         </div>
         <div className="min-w-0">
           <h1 className="font-display text-2xl font-bold text-foreground">
@@ -70,7 +81,6 @@ export default function AdminPage() {
           </p>
         </div>
         <Button
-          data-ocid="admin.logout_button"
           variant="outline"
           size="sm"
           className="ml-auto gap-2 shrink-0"
@@ -81,95 +91,47 @@ export default function AdminPage() {
         </Button>
       </div>
 
-      <Tabs defaultValue="hymns" data-ocid="admin.tabs">
-        <TabsList className="flex flex-wrap h-auto gap-1 mb-6 bg-muted/60 p-1 rounded-xl">
-          <TabsTrigger data-ocid="admin.tab.hymns" value="hymns">
-            🎵 Hymns
-          </TabsTrigger>
-          <TabsTrigger
-            data-ocid="admin.tab.bible-readings"
-            value="bible-readings"
-          >
-            📖 Bible Readings
-          </TabsTrigger>
-          <TabsTrigger
-            data-ocid="admin.tab.announcements"
-            value="announcements"
-          >
-            📢 Announcements
-          </TabsTrigger>
-          <TabsTrigger data-ocid="admin.tab.sermons" value="sermons">
-            🎤 Sermons
-          </TabsTrigger>
-          <TabsTrigger
-            data-ocid="admin.tab.sunday-program"
-            value="sunday-program"
-          >
-            📅 Sunday Program
-          </TabsTrigger>
-          <TabsTrigger
-            data-ocid="admin.tab.sunday-school"
-            value="sunday-school"
-          >
-            👶 Sunday School
-          </TabsTrigger>
-          <TabsTrigger data-ocid="admin.tab.youth" value="youth">
-            👥 Youth Ministry
-          </TabsTrigger>
-          <TabsTrigger
-            data-ocid="admin.tab.mothers-union"
-            value="mothers-union"
-          >
-            👩 Mothers' Union
-          </TabsTrigger>
-          <TabsTrigger
-            data-ocid="admin.tab.mens-association"
-            value="mens-association"
-          >
-            👨 Men's Association
-          </TabsTrigger>
-          <TabsTrigger data-ocid="admin.tab.offering" value="offering">
-            💰 Offering
-          </TabsTrigger>
-          <TabsTrigger data-ocid="admin.tab.service-book" value="service-book">
-            📘 Service Book
-          </TabsTrigger>
-        </TabsList>
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="lg:col-span-1 space-y-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium">Quick Stats</CardTitle>
+              <CardDescription>System overview</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Status</span>
+                <span className="text-green-500 font-medium">Live</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Admin Mode</span>
+                <span className="font-medium">Active</span>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
-        <TabsContent value="hymns">
-          <AdminHymns />
-        </TabsContent>
-        <TabsContent value="bible-readings">
-          <AdminBibleReadings />
-        </TabsContent>
-        <TabsContent value="announcements">
-          <AdminAnnouncements />
-        </TabsContent>
-        <TabsContent value="sermons">
-          <AdminSermons />
-        </TabsContent>
-        <TabsContent value="sunday-program">
-          <AdminSundayProgram />
-        </TabsContent>
-        <TabsContent value="sunday-school">
-          <AdminSundaySchool />
-        </TabsContent>
-        <TabsContent value="youth">
-          <AdminYouthMinistry />
-        </TabsContent>
-        <TabsContent value="mothers-union">
-          <AdminMothersUnion />
-        </TabsContent>
-        <TabsContent value="mens-association">
-          <AdminMensAssociation />
-        </TabsContent>
-        <TabsContent value="offering">
-          <AdminOffering />
-        </TabsContent>
-        <TabsContent value="service-book">
-          <AdminServiceBook />
-        </TabsContent>
-      </Tabs>
+        <div className="lg:col-span-3">
+          <Tabs defaultValue="hymns" className="w-full">
+            <TabsList className="flex flex-wrap h-auto gap-1 mb-6 bg-muted/60 p-1 rounded-xl justify-start">
+              {ADMIN_SECTIONS.map((section) => (
+                <TabsTrigger key={section.value} value={section.value} className="text-xs">
+                  <span className="mr-2">{section.icon}</span>
+                  {section.label}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+
+            {ADMIN_SECTIONS.map((section) => (
+              <TabsContent key={section.value} value={section.value} className="mt-0">
+                <Card className="border-none shadow-none bg-transparent">
+                  {section.component}
+                </Card>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </div>
+      </div>
     </div>
   );
 }

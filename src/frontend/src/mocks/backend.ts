@@ -136,6 +136,10 @@ export const mockBackend = {
 
   // Authorization
   isCallerAdmin: async () => false,
-  getCallerUserRole: async () => "guest" as unknown as UserRole,
+  // Using the object variant structure often expected by Candid-to-TS generators
+  getCallerUserRole: async () => {
+    const role: UserRole = { guest: null } as any;
+    return role;
+  },
   assignCallerUserRole: async () => {},
 } as unknown as backendInterface;

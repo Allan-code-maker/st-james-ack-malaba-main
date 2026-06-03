@@ -2,23 +2,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBibleReadings } from "@/lib/backend";
+import { formatNano, excerpt } from "@/lib/utils";
 import type { BibleReading } from "@/types";
 import { Link } from "@tanstack/react-router";
-import { format } from "date-fns";
 import { BookMarked, BookOpen, ChevronRight, Star } from "lucide-react";
-
-function formatNano(ns: bigint): string {
-  try {
-    return format(new Date(Number(ns / 1_000_000n)), "EEEE, d MMMM yyyy");
-  } catch {
-    return "";
-  }
-}
-
-function excerpt(text: string, words = 18): string {
-  const w = text.trim().split(/\s+/);
-  return w.length <= words ? text : `${w.slice(0, words).join(" ")}…`;
-}
 
 function ReadingCard({
   reading,
@@ -28,7 +15,6 @@ function ReadingCard({
     <Link
       to="/bible-readings/$id"
       params={{ id: reading.id.toString() }}
-      data-ocid={`bible-readings.item.${index + 1}`}
       className="block group"
     >
       <Card className="border border-border hover:border-primary/50 transition-all duration-200 hover:shadow-md bg-card">
@@ -69,7 +55,6 @@ export default function BibleReadingsPage() {
 
   return (
     <div
-      data-ocid="bible-readings.page"
       className="max-w-4xl mx-auto px-4 py-10 space-y-10"
     >
       {/* Page header */}
@@ -89,7 +74,7 @@ export default function BibleReadingsPage() {
 
       {/* Reading of the Day - featured */}
       {isLoading ? (
-        <div data-ocid="bible-readings.loading_state" className="space-y-3">
+        <div className="space-y-3">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-48 w-full rounded-2xl" />
         </div>
@@ -104,7 +89,6 @@ export default function BibleReadingsPage() {
           <Link
             to="/bible-readings/$id"
             params={{ id: readingOfDay.id.toString() }}
-            data-ocid="bible-readings.featured_card"
             className="block group"
           >
             <div className="relative rounded-2xl overflow-hidden border border-primary/30 bg-gradient-to-br from-primary/8 via-card to-accent/8 p-6 hover:shadow-lg transition-all duration-300 hover:border-primary/50">
@@ -152,7 +136,6 @@ export default function BibleReadingsPage() {
       {/* Empty state */}
       {!isLoading && (!readings || readings.length === 0) && (
         <div
-          data-ocid="bible-readings.empty_state"
           className="text-center py-16"
         >
           <BookOpen className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
