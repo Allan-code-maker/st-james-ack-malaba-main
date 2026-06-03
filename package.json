@@ -1,5 +1,9 @@
 {
-  "name": "@caffeine/template-app",
+  "name": "st-james-ack-malaba",
+  "description": "Official website for St. James Anglican Church of Kenya (ACK), Malaba — serving the community through faith, worship, and outreach.",
+  "version": "1.0.0",
+  "author": "Allan",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=16.0.0",
@@ -11,12 +15,21 @@
     "typecheck": "pnpm -r --if-present run typecheck",
     "check": "pnpm -r --if-present run check",
     "fix": "pnpm -r --if-present run fix",
-    "bindgen": "caffeine-bindgen --did-file ./src/backend/dist/backend.did --out-dir ./src/frontend/src --actor-interface-file --force"
+    "deploy:local": "dfx deploy",
+    "deploy:mainnet": "dfx deploy --network ic",
+    "generate": "dfx generate backend",
+    "start": "dfx start --background",
+    "stop": "dfx stop"
   },
   "devDependencies": {
     "sharp": "^0.34.4"
   },
   "dependencies": {
-    "@caffeineai/core-infrastructure": "^0.3.0"
+    "@dfinity/agent": "^2.1.3",
+    "@dfinity/auth-client": "^2.1.3",
+    "@dfinity/candid": "^2.1.3",
+    "@dfinity/identity": "^2.1.3",
+    "@dfinity/principal": "^2.1.3"
   }
 }
+
