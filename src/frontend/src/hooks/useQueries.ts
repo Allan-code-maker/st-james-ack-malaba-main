@@ -54,6 +54,7 @@ export function useBibleReadings() {
     queryKey: ["bibleReadings"],
     queryFn: async () => (actor ? actor.listBibleReadings() : []),
     enabled: !!actor && !isFetching,
+    staleTime: 1000 * 60 * 60, // 1 hour - bible readings don't change often
   });
 }
 
@@ -94,6 +95,7 @@ export function useSermons() {
     queryKey: ["sermons"],
     queryFn: async () => (actor ? actor.listSermons() : []),
     enabled: !!actor && !isFetching,
+    staleTime: 1000 * 60 * 30, // 30 minutes
   });
 }
 
@@ -113,6 +115,7 @@ export function useProgramItems() {
     queryKey: ["programItems"],
     queryFn: async () => (actor ? actor.listProgramItems() : []),
     enabled: !!actor && !isFetching,
+    refetchInterval: 1000 * 30, // Refresh every 30 seconds for live service updates
   });
 }
 

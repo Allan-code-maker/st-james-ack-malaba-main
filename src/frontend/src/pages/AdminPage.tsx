@@ -32,6 +32,7 @@ const ADMIN_SECTIONS = [
 export default function AdminPage() {
   const {
     isAuthenticated,
+    isAdmin,
     isInitializing,
     isLoggingIn,
     handleLogin,
@@ -62,6 +63,22 @@ export default function AdminPage() {
               ? "Opening login…"
               : "Login with Internet Identity"}
         </Button>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="max-w-md mx-auto px-4 py-32 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto mb-4">
+          <Shield size={28} className="text-destructive" />
+        </div>
+        <h1 className="font-display text-2xl font-bold text-foreground mb-2">
+          Access Denied
+        </h1>
+        <p className="text-muted-foreground mb-6 text-sm">
+          Your account does not have administrator permissions to manage church content.
+        </p>
       </div>
     );
   }
