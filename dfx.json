@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "canisters": {
+    "backend": {
+      "main": "src/backend/main.mo",
+      "type": "motoko"
+    },
+    "frontend": {
+      "dependencies": ["backend"],
+      "frontend": {
+        "entrypoint": "src/frontend/src/index.html"
+      },
+      "source": ["src/frontend/dist"],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "packtool": "mops sources"
+    }
+  },
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:4943",
+      "type": "ephemeral"
+    },
+    "ic": {
+      "providers": ["https://icp0.io"],
+      "type": "persistent"
+    }
+  }
+}

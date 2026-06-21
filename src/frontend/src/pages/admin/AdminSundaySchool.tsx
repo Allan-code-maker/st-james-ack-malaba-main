@@ -1,4 +1,3 @@
-import { ExternalBlob } from "@/backend";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -129,7 +128,7 @@ function ClassForm({
   );
 }
 
-function MaterialsPanel({ classId }: { classId: bigint }) {
+function MaterialsPanel({ classId }: { classId: string }) {
   const { data: materials = [], isLoading } = useLectureMaterials(classId);
   const addMaterial = useAddLectureMaterial();
   const deleteMaterial = useDeleteLectureMaterial();
@@ -167,7 +166,7 @@ function MaterialsPanel({ classId }: { classId: bigint }) {
     }
   };
 
-  const handleDelete = async (id: bigint) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this material?")) return;
     await deleteMaterial.mutateAsync({ id, classId });
     toast.success("Material deleted");
@@ -266,7 +265,7 @@ export default function AdminSundaySchool() {
     setEditing(null);
   };
 
-  const handleDelete = async (id: bigint) => {
+  const handleDelete = async (id: string) => {
     if (!confirm("Delete this class and all its materials?")) return;
     await deleteClass.mutateAsync(id);
     toast.success("Class deleted");

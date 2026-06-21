@@ -27,6 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const {
     isAuthenticated,
+    isAdmin,
     isInitializing,
     isLoggingIn,
     handleLogin,
@@ -80,8 +81,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Auth controls */}
           <div className="flex items-center gap-2 shrink-0">
-            {isAuthenticated && <AdminBadge />}
-            {isAuthenticated && (
+            {isAdmin && <AdminBadge />}
+            {isAdmin && (
               <Link
                 to="/admin"
                 className="hidden md:inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-md text-accent border border-accent/40 hover:bg-accent/10 transition-colors no-underline font-medium"
@@ -138,7 +139,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                   {link.label}
                 </Link>
               ))}
-              {isAuthenticated && (
+              {isAdmin && (
                 <Link
                   to="/admin"
                   onClick={() => setMobileOpen(false)}

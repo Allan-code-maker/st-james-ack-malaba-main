@@ -1,96 +1,75 @@
-import { AuthClient } from "@dfinity/auth-client";
-import { Identity } from "@dfinity/agent";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useQueryClient, useQuery } from "@tanstack/react-query";
-import { useState, useEffect, useCallback, useMemo } from "react";
-import { createActor } from "../declarations/backend";
+import { signInWithPopup, signOut, onAuthStateChanged, User } from "firebase/auth";
+import { auth, googleProvider } from "../lib/firebase";
 
-// Internet Identity URL — mainnet by default, local for dev
-const II_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://identity.ic0.app"
-    : `http://localhost:4943?canisterId=${process.env.CANISTER_ID_INTERNET_IDENTITY}`;
-
-const BACKEND_CANISTER_ID = process.env.CANISTER_ID_BACKEND ?? "";
+const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3001";
 
 export function useAuth() {
-  const [authClient, setAuthClient] = useState<AuthClient | null>(null);
-  const [identity, setIdentity] = useState<Identity | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
-
   const queryClient = useQueryClient();
 
-  // Boot: create the AuthClient and check existing session
   useEffect(() => {
-    AuthClient.create().then(async (client) => {
-      const authenticated = await client.isAuthenticated();
-      setAuthClient(client);
-      if (authenticated) {
-        setIdentity(client.getIdentity());
-        setIsAuthenticated(true);
-      }
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
       setIsInitializing(false);
     });
+    return unsubscribe;
   }, []);
 
-  const principalText = useMemo(
-    () => identity?.getPrincipal().toString() ?? "",
-    [identity]
-  );
-
-  // Create the backend actor using the current identity
-  const actor = useMemo(() => {
-    if (!identity || !BACKEND_CANISTER_ID) return null;
-    return createActor(BACKEND_CANISTER_ID, {
-      agentOptions: { identity },
-    });
-  }, [identity]);
+  const isAuthenticated = !!user;
+  const principalText = useMemo(() => user?.uid ?? "", [user]);
 
   const { data: userRole } = useQuery({
     queryKey: ["userRole", principalText],
     queryFn: async () => {
-      return actor ? actor.getCallerUserRole() : null;
+      if (!user) return null;
+      const token = await user.getIdToken();
+      const res = await fetch(`${API_URL}/api/auth/role`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return null;
+      return res.json();
     },
-    enabled: !!actor && isAuthenticated,
-    staleTime: 5 * 60 * 1000, // role rarely changes
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
   });
 
   const handleLogin = useCallback(async () => {
-    if (!authClient) return;
     setIsLoggingIn(true);
-    await authClient.login({
-      identityProvider: II_URL,
-      onSuccess: () => {
-        const id = authClient.getIdentity();
-        setIdentity(id);
-        setIsAuthenticated(true);
-        setIsLoggingIn(false);
-      },
-      onError: () => {
-        setIsLoggingIn(false);
-      },
-    });
-  }, [authClient]);
+    try {
+      await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+      console.error("Login failed", err);
+    } finally {
+      setIsLoggingIn(false);
+    }
+  }, []);
 
   const handleLogout = useCallback(async () => {
-    if (!authClient) return;
     queryClient.invalidateQueries({ queryKey: ["userRole", principalText] });
-    await authClient.logout();
-    setIdentity(null);
-    setIsAuthenticated(false);
+    await signOut(auth);
+    setUser(null);
     queryClient.clear();
-  }, [authClient, queryClient, principalText]);
+  }, [queryClient, principalText]);
 
-  const isAdmin = isAuthenticated && !!userRole && "admin" in userRole;
+  const getToken = useCallback(async (): Promise<string | null> => {
+    if (!user) return null;
+    return user.getIdToken();
+  }, [user]);
+
+  const isAdmin = isAuthenticated && userRole?.isAdmin === true;
 
   return {
+    user,
     isAuthenticated,
     isInitializing,
     isLoggingIn,
-    identity,
     principalText,
     isAdmin,
+    getToken,
     handleLogin,
     handleLogout,
   };

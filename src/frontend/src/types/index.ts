@@ -1,97 +1,92 @@
-import type { ExternalBlob } from "@/backend";
-
-// ─── Core Church Types — aligned exactly with backend.d.ts ─────────────────
-
-export type { ExternalBlob };
+// ─── Core Church Types — aligned with the Node.js/Firestore backend ────────
 
 export interface Hymn {
-  id: bigint;
-  number: bigint;
+  id: string;
+  number: number;
   title: string;
   lyrics: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface BibleReading {
-  id: bigint;
+  id: string;
   reference: string;
   text: string;
   isReadingOfDay: boolean;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface Announcement {
-  id: bigint;
+  id: string;
   title: string;
   body: string;
   pinned: boolean;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface Sermon {
-  id: bigint;
+  id: string;
   preacher: string;
   theme: string;
-  date: bigint;
+  date: number;
   scriptureRef: string;
   notes: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface ProgramItem {
-  id: bigint;
-  order: bigint;
+  id: string;
+  order: number;
   time: string;
   activity: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface Class {
-  id: bigint;
+  id: string;
   name: string;
   teacher: string;
   description: string;
   schedule: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface LectureMaterial {
-  id: bigint;
-  classId: bigint;
+  id: string;
+  classId: string;
   title: string;
-  file: ExternalBlob;
   fileName: string;
-  uploadedAt: bigint;
+  uploadedAt: number;
 }
 
 export interface YouthItem {
-  id: bigint;
+  id: string;
   title: string;
   description: string;
-  date?: bigint;
+  date?: number;
   leader: string;
   category: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface MothersItem {
-  id: bigint;
+  id: string;
   title: string;
   description: string;
-  date?: bigint;
+  date?: number;
   leader: string;
   category: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface MensItem {
-  id: bigint;
+  id: string;
   title: string;
   description: string;
-  date?: bigint;
+  date?: number;
   leader: string;
   category: string;
-  createdAt: bigint;
+  createdAt: number;
 }
 
 export interface OfferingInfo {
@@ -104,11 +99,11 @@ export interface OfferingInfo {
 }
 
 export interface ServiceBookItem {
-  id: bigint;
+  id: string;
   title: string;
   content: string;
-  step: bigint;
-  createdAt: bigint;
+  step: number;
+  createdAt: number;
 }
 
 // ─── Section Metadata ─────────────────────────────────────────────────────
